@@ -27,6 +27,11 @@
             <artifactId>gson</artifactId>
             <version>${gson-version}</version>
         </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis-client-version}</version>
+        </dependency>
     </dependencies>
 
 </project>

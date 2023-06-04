@@ -29,7 +29,7 @@ public class EnrichmentKafkaStream {
         return gson.fromJson(eventBody, BasicEvent.class);
     }
 
-    private EnrichedEvent enrichedEvent(BasicEvent basicEvent) {
+    private EnrichedEvent enrichedEvent(BasicEvent basicEvent, long expiryTime) {
         final Optional<EnrichedEvent> userJourney = this.eventJourneyDao.getUserJourneyEntry(basicEvent.getUserId());
         final EnrichedEvent enrichedEvent = new EnrichedEvent(
                 basicEvent.getUserId(),
@@ -39,15 +39,15 @@ public class EnrichmentKafkaStream {
                 userJourney.flatMap(EnrichedEvent::getParentEventName).orElse(Constants.ORIGIN_EVENT_NAME),
                 Instant.now().getEpochSecond()
         );
-        this.eventJourneyDao.setUserJourneyEntry(enrichedEvent, Instant.now().getEpochSecond() + sessionWindowSeconds );
+        this.eventJourneyDao.setUserJourneyEntry(enrichedEvent, expiryTime );
         return enrichedEvent;
     }
 
-    public KStream<String, String> buildEnrichmentStream(String inputKafkaTopic, StreamsBuilder builder) {
+    public KStream<String, String> buildEnrichmentStream(String inputKafkaTopic, StreamsBuilder builder, long expiryTime) {
         final KStream<String, String> inputStream = builder.stream(inputKafkaTopic);
         final KTable<String, String> enrichmentFlow = inputStream
                 .mapValues(value -> readJsonEvent(value))
-                .mapValues(basicEvent -> enrichedEvent(basicEvent))
+                .mapValues(basicEvent -> enrichedEvent(basicEvent, expiryTime))
                 .mapValues(enrichedEvent -> gson.toJson(enrichedEvent))
                 .toTable();
         return enrichmentFlow.toStream();

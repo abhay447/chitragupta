@@ -8,5 +8,5 @@ public interface EventJourneyDao {
 
     public Optional<EnrichedEvent> getUserJourneyEntry(String userId);
 
-    public void setUserJourneyEntry(EnrichedEvent enrichedEvent, long expiryTimestamp);
+    public void setUserJourneyEntry(EnrichedEvent enrichedEvent, long expiryTime);
 }
