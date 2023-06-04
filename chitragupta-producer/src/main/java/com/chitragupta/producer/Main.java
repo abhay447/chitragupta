@@ -9,7 +9,6 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
@@ -22,7 +21,7 @@ public class Main {
         properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
         // create topic
-        KafkaAdminUtils.createTopic(properties, Constants.RAW_EVENT_TOPIC);
+        KafkaAdminUtils.createTopicIfNotExists(properties, Constants.RAW_EVENT_TOPIC);
 
         // Create a KafkaProducer instance
         final KafkaProducer<String, String> producer = new KafkaProducer<>(properties);

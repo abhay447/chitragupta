@@ -95,6 +95,7 @@ services:
     image: com.chitragupta/chitragupta-persister:latest
     depends_on:
       - kafka
+      - chitragupta_enricher
     volumes:
       - /tmp:/tmp
     environment:

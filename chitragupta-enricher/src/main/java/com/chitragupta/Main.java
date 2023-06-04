@@ -6,8 +6,6 @@ import com.chitragupta.commons.kafka.KafkaAdminUtils;
 import com.chitragupta.enricher.EnrichmentKafkaStream;
 import com.chitragupta.enricher.dao.RedisEventJourneyDao;
 import com.google.gson.Gson;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -16,7 +14,6 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Produced;
 import redis.clients.jedis.Jedis;
 
-import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
@@ -35,8 +32,8 @@ public class Main {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
         // create kafka topic
-        KafkaAdminUtils.createTopic(props, Constants.RAW_EVENT_TOPIC);
-        KafkaAdminUtils.createTopic(props, Constants.ENRICHED_EVENT_TOPIC);
+        KafkaAdminUtils.createTopicIfNotExists(props, Constants.RAW_EVENT_TOPIC);
+        KafkaAdminUtils.createTopicIfNotExists(props, Constants.ENRICHED_EVENT_TOPIC);
 
         final EnrichmentKafkaStream enrichmentKafkaStream =
                 new EnrichmentKafkaStream(new Gson(), new RedisEventJourneyDao(jedis, new Gson()), Constants.sessionWindowSeconds);
