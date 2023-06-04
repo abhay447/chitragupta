@@ -1,4 +1,4 @@
-package com.chitragupta.event;
+package com.chitragupta.coomons.event;
 
 public class EnrichedEvent extends BasicEvent{
 

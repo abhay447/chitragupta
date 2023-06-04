@@ -1,6 +1,6 @@
 package com.chitragupta.enricher.dao;
 
-import com.chitragupta.event.EnrichedEvent;
+import com.chitragupta.coomons.event.EnrichedEvent;
 
 public interface EventJourneyDao {
 
