@@ -69,11 +69,13 @@ services:
     depends_on:
       - kafka
       - chitragupta_enricher
+      - coordinator
     volumes:
       - /tmp:/tmp
     environment:
       KAFKA_URL: kafka:9092
       REDIS_URL: redis://redis:6379/0
+      DRUID_COORDINATOR_URL: http://coordinator:8081
 
   postgres:
     container_name: postgres

@@ -1,6 +1,7 @@
 package com.chitragupta;
 
 import com.chitragupta.commons.Constants;
+import com.chitragupta.commons.druid.DruidClient;
 import com.chitragupta.commons.kafka.CustomKafkaStreamsExceptionHandler;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
@@ -9,15 +10,27 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 
 public class Main {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    private static final String ENRICHED_EVENT_DRUID_SPEC_FILE_PATH = "druid/enriched_events_druid_spec.json";
+
+    private static void submitDruidIngestionSpec(DruidClient druidClient, String enrichedEventDruidSpecPath) throws URISyntaxException, IOException {
+        final String enrichedEventDruidSpec = Files.readString(
+                Path.of(Thread.currentThread().getContextClassLoader().getResource(enrichedEventDruidSpecPath).toURI()));
+        druidClient.submitIngestionSpec(enrichedEventDruidSpec);
+    }
+
+    public static void main(String[] args) throws IOException, URISyntaxException {
         // output file path
         String outputFilePath = System.getenv().getOrDefault(Constants.ENV_EVENT_PERSISTENCE_PATH,"/tmp/chitragupta_output.log");
-        System.out.println(outputFilePath);
+
         // Kafka Streams configuration
         final String kafkaUrl = System.getenv(Constants.ENV_KAFKA_URL);
         final Properties props = new Properties();
@@ -26,22 +39,18 @@ public class Main {
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
-        // Create a StreamsBuilder
-        StreamsBuilder builder = new StreamsBuilder();
+        // setup druid ingestion spec
+        final String druidCoordinatorUrl = System.getenv(Constants.ENV_DRUID_COORDINATOR_URL);
+        final DruidClient druidClient = new DruidClient(druidCoordinatorUrl);
+        submitDruidIngestionSpec(druidClient,ENRICHED_EVENT_DRUID_SPEC_FILE_PATH);
 
-        // Create a KStream from the input topic
-        KStream<String, String> inputStream = builder.stream(Constants.ENRICHED_EVENT_TOPIC);
-
-        // Redirect the output to a log file
-        PrintStream logFile = new PrintStream(outputFilePath);
+        // Create kafka stream
+        final StreamsBuilder builder = new StreamsBuilder();
+        final KStream<String, String> inputStream = builder.stream(Constants.ENRICHED_EVENT_TOPIC);
+        final PrintStream logFile = new PrintStream(outputFilePath);
         inputStream.foreach((key, value) -> logFile.println(value));
-
-        // Build the Kafka Streams application
-        KafkaStreams streams = new KafkaStreams(builder.build(), props);
-
+        final KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.setUncaughtExceptionHandler(new CustomKafkaStreamsExceptionHandler());
-
-        // Start the Kafka Streams application
         streams.start();
 
         try {
