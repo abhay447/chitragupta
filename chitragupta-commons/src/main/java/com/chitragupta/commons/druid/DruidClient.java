@@ -49,6 +49,7 @@ public class DruidClient {
             }
         } catch (ParseException | IOException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

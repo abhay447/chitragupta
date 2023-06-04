@@ -1,5 +1,6 @@
 package com.chitragupta;
 
+import com.chitragupta.commons.BasicRetryUtils;
 import com.chitragupta.commons.Constants;
 import com.chitragupta.commons.druid.DruidClient;
 import com.chitragupta.commons.kafka.CustomKafkaStreamsExceptionHandler;
@@ -15,19 +16,21 @@ import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.Properties;
 
 public class Main {
 
     private static final String ENRICHED_EVENT_DRUID_SPEC_FILE_PATH = "druid/enriched_events_druid_spec.json";
 
-    private static void submitDruidIngestionSpec(DruidClient druidClient, String enrichedEventDruidSpecPath) throws URISyntaxException, IOException {
+    private static void submitDruidIngestionSpec(DruidClient druidClient, String enrichedEventDruidSpecPath) throws URISyntaxException, IOException, InterruptedException {
         final String enrichedEventDruidSpec = Files.readString(
                 Path.of(Thread.currentThread().getContextClassLoader().getResource(enrichedEventDruidSpecPath).toURI()));
-        druidClient.submitIngestionSpec(enrichedEventDruidSpec);
+        BasicRetryUtils
+                .runWithRetries(5, druidClient::submitIngestionSpec, enrichedEventDruidSpec);
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
         // output file path
         String outputFilePath = System.getenv().getOrDefault(Constants.ENV_EVENT_PERSISTENCE_PATH,"/tmp/chitragupta_output.log");
 
