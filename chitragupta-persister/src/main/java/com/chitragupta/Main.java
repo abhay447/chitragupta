@@ -1,6 +1,7 @@
 package com.chitragupta;
 
 import com.chitragupta.commons.Constants;
+import com.chitragupta.commons.kafka.CustomKafkaStreamsExceptionHandler;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -38,8 +39,24 @@ public class Main {
         // Build the Kafka Streams application
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
 
+        streams.setUncaughtExceptionHandler(new CustomKafkaStreamsExceptionHandler());
+
         // Start the Kafka Streams application
         streams.start();
+
+        try {
+            // Add an infinite loop to keep the application running
+            while (true) {
+                System.out.println(streams.state());
+                Thread.sleep(1000); // Adjust the sleep duration as needed
+            }
+        } catch (InterruptedException e) {
+            // Handle any InterruptedException gracefully
+            e.printStackTrace();
+        } finally {
+            // Shutdown Kafka Streams before exiting
+            streams.close();
+        }
 
         // Add shutdown hook to gracefully close the Kafka Streams application
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
