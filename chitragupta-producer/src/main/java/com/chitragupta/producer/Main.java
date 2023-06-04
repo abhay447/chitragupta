@@ -11,8 +11,10 @@ import java.util.Properties;
 public class Main {
     public static void main(String[] args) {
         final MockDataManager mockDataManager = new MockDataManager();
+        // kafka props
+        final String kafkaUrl = System.getenv(Constants.ENV_KAFKA_URL);
         final Properties properties = new Properties();
-        properties.put("bootstrap.servers", "localhost:9092");
+        properties.put("bootstrap.servers", kafkaUrl);
         properties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         properties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 

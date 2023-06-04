@@ -17,11 +17,13 @@ import java.util.Properties;
 public class Main {
     public static void main(String[] args) {
         // jedis
-        final Jedis jedis = new Jedis("localhost");
+        final String redisUrl = System.getenv(Constants.ENV_REDIS_URL);
+        final Jedis jedis = new Jedis(redisUrl);
         // kafka props
+        final String kafkaUrl = System.getenv(Constants.ENV_KAFKA_URL);
         Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "my-streams-app");
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 

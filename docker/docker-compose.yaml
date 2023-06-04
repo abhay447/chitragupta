@@ -78,12 +78,18 @@ services:
     image: com.chitragupta/chitragupta-producer:latest
     depends_on:
       - kafka
+    environment:
+      KAFKA_URL: kafka:9092
+      REDIS_URL: redis:6379
 
   chitragupta_enricher:
     image: com.chitragupta/chitragupta-enricher:latest
     depends_on:
       - kafka
       - redis
+    environment:
+      KAFKA_URL: kafka:9092
+      REDIS_URL: redis:6379
 
   chitragupta_persister:
     image: com.chitragupta/chitragupta-persister:latest
@@ -91,3 +97,6 @@ services:
       - kafka
     volumes:
       - /tmp:/tmp
+    environment:
+      KAFKA_URL: kafka:9092
+      REDIS_URL: redis:6379

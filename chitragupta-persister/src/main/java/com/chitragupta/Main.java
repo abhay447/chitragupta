@@ -18,9 +18,10 @@ public class Main {
         String outputFilePath = System.getenv().getOrDefault(Constants.ENV_EVENT_PERSISTENCE_PATH,"/tmp/chitragupta_output.log");
         System.out.println(outputFilePath);
         // Kafka Streams configuration
+        final String kafkaUrl = System.getenv(Constants.ENV_KAFKA_URL);
         final Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "my-streams-persister-app");
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
