@@ -12,6 +12,7 @@
         <module>chitragupta-producer</module>
         <module>chritragupta-enricher</module>
         <module>chitragupta-persister</module>
+        <module>commons</module>
     </modules>
 
     <properties>
