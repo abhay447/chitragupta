@@ -9,4 +9,6 @@ public class Constants {
     public static final String ORIGIN_EVENT_NAME = "ORIGIN";
 
     public static final long sessionWindowSeconds = 30;
+
+    public static final String ENV_EVENT_PERSISTENCE_PATH = "EVENT_PERSISTENCE_PATH";
 }
