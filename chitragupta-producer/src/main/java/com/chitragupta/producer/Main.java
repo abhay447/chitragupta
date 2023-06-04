@@ -31,7 +31,7 @@ public class Main {
             final String eventAsJsonStr = gson.toJson(basicEvent);
             System.out.println(basicEvent);
             eventKafkaProducer.sendEvent(eventAsJsonStr);
-            TimeUnit.SECONDS.sleep(1);
+            Thread.sleep(100);
         }
     }
 }
