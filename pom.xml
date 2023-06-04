@@ -10,9 +10,9 @@
     <version>${release}</version>
     <modules>
         <module>chitragupta-producer</module>
-        <module>chritragupta-enricher</module>
+        <module>chitragupta-enricher</module>
         <module>chitragupta-persister</module>
-        <module>commons</module>
+        <module>chitragupta-commons</module>
     </modules>
 
     <properties>
