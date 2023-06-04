@@ -19,7 +19,7 @@ public class RedisEventJourneyDao implements EventJourneyDao{
 
     @Override
     public Optional<EnrichedEvent> getUserJourneyEntry(String userId) {
-        return Optional.of(jedis.get(userId)).map(val -> gson.fromJson(val,EnrichedEvent.class));
+        return Optional.ofNullable(jedis.get(userId)).map(val -> gson.fromJson(val,EnrichedEvent.class));
     }
 
     @Override
