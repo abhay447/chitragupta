@@ -8,10 +8,7 @@ import com.chitragupta.enricher.dao.RedisEventJourneyDao;
 import com.google.gson.Gson;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Produced;
 import redis.clients.jedis.Jedis;
 
 import java.util.Properties;
@@ -44,7 +41,7 @@ public class Main {
         try {
             // Add an infinite loop to keep the application running
             while (true) {
-                 System.out.println(streams.state());
+                System.out.println(streams.state());
                 Thread.sleep(1000); // Adjust the sleep duration as needed
             }
         } catch (InterruptedException e) {
