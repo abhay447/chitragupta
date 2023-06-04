@@ -80,7 +80,7 @@ services:
       - kafka
     environment:
       KAFKA_URL: kafka:9092
-      REDIS_URL: redis:6379
+      REDIS_URL: redis://redis:6379/0
 
   chitragupta_enricher:
     image: com.chitragupta/chitragupta-enricher:latest
@@ -89,7 +89,7 @@ services:
       - redis
     environment:
       KAFKA_URL: kafka:9092
-      REDIS_URL: redis:6379
+      REDIS_URL: redis://redis:6379/0
 
   chitragupta_persister:
     image: com.chitragupta/chitragupta-persister:latest
@@ -99,4 +99,4 @@ services:
       - /tmp:/tmp
     environment:
       KAFKA_URL: kafka:9092
-      REDIS_URL: redis:6379
+      REDIS_URL: redis://redis:6379/0
