@@ -22,6 +22,28 @@
         <kafka-client-version>3.4.0</kafka-client-version>
         <gson-version>2.10.1</gson-version>
         <jedis-client-version>4.3.1</jedis-client-version>
+        <docker-image-prefix>com.chitragupta</docker-image-prefix>
     </properties>
+
+    <build>
+        <plugins>
+            <!-- Other plugins -->
+
+            <!-- Jib Maven Plugin -->
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <to>
+                        <image>${docker-image-prefix}/${project.artifactId}</image>
+                        <tags>
+                            <tag>${project.version}</tag>
+                        </tags>
+                    </to>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
