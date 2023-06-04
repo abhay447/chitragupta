@@ -13,7 +13,7 @@ public class MockDataManager {
     public BasicEvent generateEvent() {
         final Random random = new Random();
         final String eventName = String.valueOf((char)((int)'A' + random.nextInt(MAX_EVENT_COUNT)));
-        final String userId = UUID.nameUUIDFromBytes(String.valueOf(random.nextLong()).getBytes()).toString();
+        final String userId = UUID.nameUUIDFromBytes(String.valueOf(random.nextLong(MAX_USER_COUNT)).getBytes()).toString();
         return new BasicEvent(userId, eventName);
     }
 }
