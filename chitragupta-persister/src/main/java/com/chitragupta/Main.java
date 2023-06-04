@@ -47,7 +47,7 @@ public class Main {
         try {
             // Add an infinite loop to keep the application running
             while (true) {
-                System.out.println(streams.state());
+//                System.out.println(streams.state());
                 Thread.sleep(1000); // Adjust the sleep duration as needed
             }
         } catch (InterruptedException e) {
