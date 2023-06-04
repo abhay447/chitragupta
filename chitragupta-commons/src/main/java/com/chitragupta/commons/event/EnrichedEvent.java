@@ -1,26 +1,28 @@
 package com.chitragupta.commons.event;
 
+import java.util.Optional;
+
 public class EnrichedEvent extends BasicEvent{
 
-    private final String parentEventName;
+    private final Optional<String> parentEventName;
 
-    private final String grandParentEventName;
+    private final Optional<String> grandParentEventName;
 
     private final long enrichmentTimestamp;
 
 
     public EnrichedEvent(String userId, String eventName, long timestamp, String parentEventName, String grandParentEventName, long enrichmentTimestamp) {
         super(userId, eventName, timestamp);
-        this.parentEventName = parentEventName;
-        this.grandParentEventName = grandParentEventName;
+        this.parentEventName = Optional.of(parentEventName);
+        this.grandParentEventName = Optional.of(grandParentEventName);
         this.enrichmentTimestamp = enrichmentTimestamp;
     }
 
-    public String getParentEventName() {
+    public Optional<String> getParentEventName() {
         return parentEventName;
     }
 
-    public String getGrandParentEventName() {
+    public Optional<String> getGrandParentEventName() {
         return grandParentEventName;
     }
 
