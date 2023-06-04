@@ -1,6 +1,6 @@
 package com.chitragupta;
 
-import com.chitragupta.coomons.event.BasicEvent;
+import com.chitragupta.commons.event.BasicEvent;
 
 import java.util.Random;
 import java.util.UUID;

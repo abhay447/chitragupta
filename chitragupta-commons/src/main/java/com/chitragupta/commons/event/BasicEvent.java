@@ -1,4 +1,4 @@
-package com.chitragupta.coomons.event;
+package com.chitragupta.commons.event;
 
 import java.time.Instant;
 
