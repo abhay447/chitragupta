@@ -7,9 +7,10 @@ import com.google.gson.Gson;
 import org.apache.kafka.clients.producer.KafkaProducer;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         final MockDataManager mockDataManager = new MockDataManager();
         // kafka props
         final String kafkaUrl = System.getenv(Constants.ENV_KAFKA_URL);
@@ -30,6 +31,7 @@ public class Main {
             final String eventAsJsonStr = gson.toJson(basicEvent);
             System.out.println(basicEvent);
             eventKafkaProducer.sendEvent(eventAsJsonStr);
+            TimeUnit.SECONDS.sleep(1);
         }
     }
 }
