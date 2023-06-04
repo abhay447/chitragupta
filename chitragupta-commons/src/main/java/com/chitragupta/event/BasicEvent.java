@@ -1,5 +1,7 @@
 package com.chitragupta.event;
 
+import java.time.Instant;
+
 public class BasicEvent {
     private final String userId;
 
@@ -13,6 +15,12 @@ public class BasicEvent {
         this.timestamp = timestamp;
     }
 
+    public BasicEvent(String userId, String eventName) {
+        this.userId = userId;
+        this.eventName = eventName;
+        this.timestamp = Instant.now().getEpochSecond();
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -23,5 +31,14 @@ public class BasicEvent {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "BasicEvent{" +
+                "userId='" + userId + '\'' +
+                ", eventName='" + eventName + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }

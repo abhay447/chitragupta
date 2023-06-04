@@ -2,6 +2,9 @@ package com.chitragupta;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        final MockDataManager mockDataManager = new MockDataManager();
+        while(true) {
+            System.out.println(mockDataManager.generateEvent());
+        }
     }
 }

@@ -27,4 +27,13 @@ public class EnrichedEvent extends BasicEvent{
     public long getEnrichmentTimestamp() {
         return enrichmentTimestamp;
     }
+
+    @Override
+    public String toString() {
+        return "EnrichedEvent{" +
+                "parentEventName='" + parentEventName + '\'' +
+                ", grandParentEventName='" + grandParentEventName + '\'' +
+                ", enrichmentTimestamp=" + enrichmentTimestamp +
+                '}';
+    }
 }
