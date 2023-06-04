@@ -17,4 +17,5 @@ public class Constants {
     public static final String ENV_MAX_USER_COUNT = "MAX_USER_COUNT";
 
     public static final String ENV_MAX_EVENT_COUNT = "MAX_EVENT_COUNT";
+    public static final String ENV_EVENT_PRODUCE_SLEEP_MILLIS = "EVENT_PRODUCE_SLEEP_MILLIS";
 }

@@ -81,8 +81,9 @@ services:
     environment:
       KAFKA_URL: kafka:9092
       REDIS_URL: redis://redis:6379/0
-      MAX_USER_COUNT: 100L
+      MAX_USER_COUNT: 100 # 100 unique users
       MAX_EVENT_COUNT: 26 # represents letters A to Z
+      EVENT_PRODUCE_SLEEP_MILLIS: 100 # sleep interval millis between two events
 
   chitragupta_enricher:
     image: com.chitragupta/chitragupta-enricher:latest
