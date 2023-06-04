@@ -32,15 +32,11 @@ public class Main {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
         // create kafka topic
-        KafkaAdminUtils.createTopicIfNotExists(props, Constants.RAW_EVENT_TOPIC);
         KafkaAdminUtils.createTopicIfNotExists(props, Constants.ENRICHED_EVENT_TOPIC);
 
         final EnrichmentKafkaStream enrichmentKafkaStream =
                 new EnrichmentKafkaStream(new Gson(), new RedisEventJourneyDao(jedis, new Gson()), Constants.sessionWindowSeconds);
-        final StreamsBuilder builder = new StreamsBuilder();
-        final KStream<String , String> enrichmentStream = enrichmentKafkaStream.buildEnrichmentStream(Constants.RAW_EVENT_TOPIC, builder, Constants.sessionWindowSeconds);
-        enrichmentStream.to(Constants.ENRICHED_EVENT_TOPIC, Produced.with(Serdes.String(), Serdes.String()));
-        KafkaStreams streams = new KafkaStreams(builder.build(), props);
+        KafkaStreams streams = enrichmentKafkaStream.buildEnrichmentStream(props, Constants.RAW_EVENT_TOPIC, Constants.sessionWindowSeconds, Constants.ENRICHED_EVENT_TOPIC);
         streams.setUncaughtExceptionHandler(new CustomKafkaStreamsExceptionHandler());
         // Start the Kafka Streams application
         streams.start();
@@ -48,7 +44,7 @@ public class Main {
         try {
             // Add an infinite loop to keep the application running
             while (true) {
-                // System.out.println(streams.state());
+                 System.out.println(streams.state());
                 Thread.sleep(1000); // Adjust the sleep duration as needed
             }
         } catch (InterruptedException e) {

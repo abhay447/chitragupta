@@ -5,12 +5,15 @@ import com.chitragupta.commons.event.BasicEvent;
 import com.chitragupta.commons.event.EnrichedEvent;
 import com.chitragupta.enricher.dao.EventJourneyDao;
 import com.google.gson.Gson;
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Produced;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.Properties;
 
 public class EnrichmentKafkaStream {
 
@@ -43,13 +46,15 @@ public class EnrichmentKafkaStream {
         return enrichedEvent;
     }
 
-    public KStream<String, String> buildEnrichmentStream(String inputKafkaTopic, StreamsBuilder builder, long expiryTime) {
+    public KafkaStreams buildEnrichmentStream(Properties props, String inputKafkaTopic, long expiryTime,
+                                              String outputTopicName) {
+        final StreamsBuilder builder = new StreamsBuilder();
         final KStream<String, String> inputStream = builder.stream(inputKafkaTopic);
-        final KTable<String, String> enrichmentFlow = inputStream
+        final KStream<String,String> enrichmentStream =  inputStream
                 .mapValues(value -> readJsonEvent(value))
                 .mapValues(basicEvent -> enrichedEvent(basicEvent, expiryTime))
-                .mapValues(enrichedEvent -> gson.toJson(enrichedEvent))
-                .toTable();
-        return enrichmentFlow.toStream();
+                .mapValues(enrichedEvent -> gson.toJson(enrichedEvent));
+        enrichmentStream.to(outputTopicName, Produced.with(Serdes.String(), Serdes.String()));
+        return new KafkaStreams(builder.build(), props);
     }
 }

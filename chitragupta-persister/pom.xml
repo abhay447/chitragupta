@@ -31,6 +31,15 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
+                <configuration>
+                    <container>
+                        <!-- Configure other container settings -->
+                        <jvmFlags>
+                            <jvmFlag>--add-opens=java.base/java.util=ALL-UNNAMED</jvmFlag>
+                            <!-- Add more JVM flags as needed -->
+                        </jvmFlags>
+                    </container>
+                </configuration>
             </plugin>
         </plugins>
     </build>
