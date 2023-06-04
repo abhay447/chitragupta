@@ -1,4 +1,4 @@
-package com.chitragupta;
+package com.chitragupta.producer;
 
 public class Main {
     public static void main(String[] args) {
