@@ -12,6 +12,10 @@ import java.util.concurrent.ExecutionException;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
+        final long maxUserCount = Long.parseLong(System.getenv().getOrDefault(
+                Constants.ENV_MAX_USER_COUNT, "100L"));
+        final int maxEventCount = Integer.parseInt(System.getenv().getOrDefault(
+                Constants.ENV_MAX_EVENT_COUNT, "26"));
         final MockDataManager mockDataManager = new MockDataManager();
         // kafka props
         final String kafkaUrl = System.getenv(Constants.ENV_KAFKA_URL);
@@ -31,7 +35,7 @@ public class Main {
         final Gson gson = new Gson();
 
         while(true) {
-            final BasicEvent basicEvent = mockDataManager.generateEvent();
+            final BasicEvent basicEvent = mockDataManager.generateEvent(maxUserCount, maxEventCount);
             final String eventAsJsonStr = gson.toJson(basicEvent);
 //            System.out.println(basicEvent);
             eventKafkaProducer.sendEvent(eventAsJsonStr);
