@@ -9,6 +9,8 @@ services:
     image: confluentinc/cp-zookeeper:latest
     ports:
       - 2181:2181
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -23,7 +25,7 @@ services:
       - zookeeper
 
   druid-coordinator:
-    image: apache/druid:latest
+    image: apache/druid:26.0.0
     ports:
       - 8081:8081
     environment:
@@ -33,7 +35,7 @@ services:
       - kafka
 
   druid-broker:
-    image: apache/druid:latest
+    image: apache/druid:26.0.0
     ports:
       - 8082:8082
     environment:
@@ -43,7 +45,7 @@ services:
       - kafka
 
   druid-historical:
-    image: apache/druid:latest
+    image: apache/druid:26.0.0
     ports:
       - 8083:8083
     environment:
@@ -53,7 +55,7 @@ services:
       - kafka
 
   druid-middlemanager:
-    image: apache/druid:latest
+    image: apache/druid:26.0.0
     ports:
       - 8091:8091
     environment:
@@ -63,7 +65,7 @@ services:
       - kafka
 
   druid-overlord:
-    image: apache/druid:latest
+    image: apache/druid:26.0.0
     ports:
       - 8090:8090
     environment:
@@ -71,3 +73,21 @@ services:
     depends_on:
       - zookeeper
       - kafka
+
+  chitragupta_producer:
+    image: com.chitragupta/chitragupta-producer:latest
+    depends_on:
+      - kafka
+
+  chitragupta_enricher:
+    image: com.chitragupta/chitragupta-enricher:latest
+    depends_on:
+      - kafka
+      - redis
+
+  chitragupta_persister:
+    image: com.chitragupta/chitragupta-persister:latest
+    depends_on:
+      - kafka
+    volumes:
+      - /tmp:/tmp
